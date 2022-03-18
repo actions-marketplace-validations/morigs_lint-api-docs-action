@@ -1,0 +1,21 @@
+name: 'Lint OpenAPI and AsyncAPI (Spectral)'
+description: 'Validate and lint OpenAPI and AsyncAPI files using Spectral'
+author: 'Igor Morozov <morozov.ig.s@gmail.com>'
+inputs:
+  files-glob:
+    description: 'Glob specifying files to run linter on. Default is ./**/*@(open|async)api.y?(a)ml'
+    required: false
+    default: './**/*@(open|async)api.y?(a)ml'
+  ruleset-file:
+    description: Path or URL to file containing Spectral ruleset. If not specified, then default ruleset will be used.
+    required: false
+  fail-severity:
+    description: 'Results of this level or above will trigger a failure of the check. Available levels: error, warn, info, hint, off.'
+    required: false
+    default: 'error'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: book-open
+  color: green

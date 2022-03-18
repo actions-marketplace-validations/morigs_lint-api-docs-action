@@ -1,0 +1,10 @@
+on: [workflow_dispatch]
+
+jobs:
+  lint-openapi:
+    runs-on: ubuntu-latest
+    name: Validate OpenAPI
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check that the OpenAPI file is valid
+        uses: ./
