@@ -1,5 +1,7 @@
 on: [workflow_dispatch]
 
+name: Test Workflow
+
 jobs:
   lint-openapi:
     runs-on: ubuntu-latest
