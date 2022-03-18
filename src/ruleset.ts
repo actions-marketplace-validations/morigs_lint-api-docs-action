@@ -1,12 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { info, error } from '@actions/core';
+import { info } from '@actions/core';
 import { Ruleset, RulesetDefinition } from '@stoplight/spectral-core';
 import { migrateRuleset } from '@stoplight/spectral-ruleset-migrator';
 
 const AsyncFunction = (async (): Promise<void> => void 0).constructor as FunctionConstructor;
-
-const defaultRuleset = { extends: ['spectral:oas', 'spectral:asyncapi'] };
 
 export async function getRuleset(dir: string, file?: string): Promise<Ruleset> {
   if (!file) {
@@ -15,42 +13,37 @@ export async function getRuleset(dir: string, file?: string): Promise<Ruleset> {
     file = path.join(process.cwd(), file);
   }
 
+  let ruleset;
+
   if (!file) {
-    info(`Using default ruleset: ${JSON.stringify(defaultRuleset)}`);
-
-    return new Ruleset(defaultRuleset, { severity: 'recommended' });
+    info(`Using default ruleset`);
+    file = path.join(__dirname, 'default.yaml');
   }
 
-  info(`Loading ruleset from ${file}`);
+  if (/(json|ya?ml)$/.test(path.extname(file))) {
+    info(`Loading basic ruleset from ${file}`);
 
+    const m: { exports?: RulesetDefinition } = {};
+    const paths = [path.dirname(file), __dirname, dir];
 
-  try {
-    let ruleset;
+    const migratedRuleset = await migrateRuleset(file, { format: 'commonjs', fs });
+    await AsyncFunction('module, require', migratedRuleset)(m, (id: string) => require(require.resolve(id, { paths })));
 
-    if (/(json|ya?ml)$/.test(path.extname(file))) {
-      const m: { exports?: RulesetDefinition } = {};
-      const paths = [path.dirname(file), __dirname];
+    ruleset = m.exports;
+  } else {
+    info(`Loading JS ruleset from ${file}`);
 
-      const migratedRuleset = await migrateRuleset(file, { format: 'commonjs', fs });
-      await AsyncFunction('module, require', migratedRuleset)(m, (id: string) => require(require.resolve(id, { paths })));
-
-      ruleset = m.exports;
-    } else {
-      const imported = (await import(file)) as { default: unknown } | unknown;
-      ruleset =
-        typeof imported === 'object' && imported !== null && 'default' in imported
-          ? (imported as Record<'default', unknown>).default
-          : imported;
-    }
-
-    return new Ruleset(ruleset, {
-      severity: 'recommended',
-      source: file,
-    });
-  } catch (e) {
-    error(`Failed to load ruleset '${file}'... Error: ${(e as Error).message}`);
-    throw e;
+    const imported = (await import(file)) as { default: unknown } | unknown;
+    ruleset =
+      typeof imported === 'object' && imported !== null && 'default' in imported
+        ? (imported as Record<'default', unknown>).default
+        : imported;
   }
+
+  return new Ruleset(ruleset, {
+    severity: 'recommended',
+    source: file,
+  });
 }
 
 async function getDefaultRulesetFile(dir: string): Promise<string | undefined> {
