@@ -16,7 +16,7 @@ export async function getRuleset(dir: string, file?: string): Promise<Ruleset> {
   }
 
   if (!file) {
-    info(`Using default ruleset`);
+    info(`Using default ruleset: ${JSON.stringify(defaultRuleset)}`);
 
     return new Ruleset(defaultRuleset, { severity: 'recommended' });
   }
