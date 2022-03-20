@@ -7,7 +7,7 @@ inputs:
     required: false
     default: './**/*@(open|async)api.y?(a)ml'
   ruleset-file:
-    description: Path or URL to file containing Spectral ruleset. If not specified, then default ruleset will be used.
+    description: 'Path or URL to file containing Spectral ruleset. If not specified, then default ruleset will be used.'
     required: false
   fail-severity:
     description: 'Results of this level or above will trigger a failure of the check. Available levels: error, warn, info, hint, off.'
