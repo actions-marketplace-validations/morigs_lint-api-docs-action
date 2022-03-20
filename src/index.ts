@@ -20,7 +20,8 @@ main()
 async function main() {
   const filesGlob = getInput(FILES_GLOB_INPUT);
   const rulesetPath = getInput(RULESET_FILE_PATH_INPUT);
-  const failSeverity = getDiagnosticSeverity(getInput(FAIL_SEVERITY_INPUT) as HumanReadableDiagnosticSeverity);
+  const failSeverityInput = getInput(FAIL_SEVERITY_INPUT);
+  const failSeverity = getDiagnosticSeverity(failSeverityInput as HumanReadableDiagnosticSeverity);
 
   const spectral = new Spectral({ resolver: httpAndFileResolver });
   spectral.setRuleset(await getRuleset(workspace, rulesetPath));
@@ -42,7 +43,7 @@ async function main() {
   }
 
   if (shouldFail) {
-    setFailed(`There are problems with severity higher than ${failSeverity}.`);
+    setFailed(`There are problems with severity higher than ${failSeverityInput}.`);
   }
 }
 
