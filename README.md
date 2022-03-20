@@ -29,9 +29,9 @@ jobs:
 
 There are no required inputs.
 
-`files-glob` - glob specifying files to run linter on.. Default is `./**/*@(open|async)api.y?(a)ml`.
-`ruleset-file` - path or URL to file containing Spectral ruleset. If not specified, then default ruleset will be used.
-`fail-severity` - Results of this level or above will trigger a failure of the check. Available levels: error, warn, info, hint, off.
+- `files-glob` - glob specifying files to run linter on.. Default is `./**/*@(open|async)api.y?(a)ml`.
+- `ruleset-file` - path or URL to file containing Spectral ruleset. If not specified, then default ruleset will be used.
+- `fail-severity` - Results of this level or above will trigger a failure of the check. Available levels: error, warn, info, hint, off.
 
 Default ruleset:
 
