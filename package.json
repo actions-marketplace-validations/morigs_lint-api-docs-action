@@ -1,7 +1,7 @@
 {
   "name": "lint-api-docs-action",
   "description": "Validate and lint OpenAPI and AsyncAPI files using Spectral",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
